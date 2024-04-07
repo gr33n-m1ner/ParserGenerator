@@ -1,0 +1,25 @@
+Sum
+plus -> @t{[+]}@
+minus -> @t{[-]}@
+slash -> @t{[/]}@
+sslash -> @t{[l][g]}@
+number -> @t{[1-9][0-9]*|0}@
+star -> @t{[*]}@
+left -> @t{[(]}@
+right -> @t{[)]}@
+whitespace skipped -> @t{[ ]+}@
+Sum @s{int Sum()}@ -> Product @v{int _p = Product()}@ SumCont @c{return SumCont(_p)}@
+SumCont @s{int SumCont(int _val)}@ -> plus Product @v{int _p = Product()}@ SumCont @c{return SumCont(_val + _p)}@
+SumCont -> minus Product @v{int _p = Product()}@ SumCont @c{return SumCont(_val - _p)}@
+SumCont -> @c{return _val}@
+Product @s{int Product()}@ -> Log @v{int _u = Log()}@ ProductCont @c{return ProductCont(_u)}@
+ProductCont @s{int ProductCont(int _val)}@ -> star Log @v{int _u = Log()}@ ProductCont @c{return ProductCont(_val * _u)}@
+ProductCont -> slash Log @v{int _u = Log()}@ ProductCont @c{return ProductCont(_val / _u)}@
+ProductCont -> @c{return _val}@
+Log @s{int Log()}@ -> Unary @v{int _u = Unary()}@ LogCont @c{return LogCont(_u)}@
+LogCont @s{int LogCont(int _val)}@ -> sslash Unary @v{int _u = Unary()}@ LogCont @c{return (int) (Math.log(_val) / Math.log(LogCont(_u)))}@
+LogCont -> @c{return _val}@
+Unary @s{int Unary()}@ -> number @c{return Integer.parseInt(_number1)}@
+Unary -> minus Unary @c{return -Unary()}@
+Unary -> left Sum @v{int _s = Sum()}@right @c{return _s}@
+

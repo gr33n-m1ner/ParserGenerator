@@ -1,0 +1,23 @@
+Expr
+not -> @t{not}@
+or -> @t{or}@
+xor -> @t{xor}@
+and -> @t{and}@
+left -> @t{[(]}@
+right -> @t{[)]}@
+var -> @t{[a-z]+}@
+whitespace skipped -> @t{[ ]+}@
+Expr @s{Tree Expr()}@ -> Or @c{return new Tree("Expr", Or())}@
+Or @s{Tree Or()}@ -> Xor @v{Tree _x = Xor()}@ OrCont @c{return new Tree("Or", _x, OrCont())}@
+OrCont @s{Tree OrCont()}@ -> or Xor @v{Tree _x = Xor()}@ OrCont @c{return new Tree("OrCont", new Tree("or"), _x, OrCont())}@
+OrCont -> @c{return new Tree("OrCont", new Tree("eps"))}@
+Xor @s{Tree Xor()}@ -> And @v{Tree _a = And()}@ XorCont @c{return new Tree("Xor", _a, XorCont())}@
+XorCont @s{Tree XorCont()}@ -> xor And @v{Tree _a = And()}@ XorCont @c{return new Tree("XorCont", new Tree("xor"), _a, XorCont())}@
+XorCont -> @c{return new Tree("XorCont", new Tree("eps"))}@
+And @s{Tree And()}@ -> Unary @v{Tree _u = Unary()}@ AndCont @c{return new Tree("And", _u, AndCont())}@
+AndCont @s{Tree AndCont()}@ -> and Unary @v{Tree _u = Unary()}@ AndCont @c{return new Tree("AndCont", new Tree("and"), _u, AndCont())}@
+AndCont -> @c{return new Tree("AndCont", new Tree("eps"))}@
+Unary @s{Tree Unary()}@ -> var @c{if (_var1.length() == 1) {return new Tree("Unary", new Tree("var"));}}@
+Unary -> not Unary @c{return new Tree("Tree", new Tree("not"), Unary())}@
+Unary -> left Expr @v{Tree _e = Expr()}@ right @c{return new Tree("Unary", new Tree("("), _e, new Tree(")"))}@
+
